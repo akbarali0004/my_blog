@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}
+{{post.title}}
+{% endblock title %}
+
+{% block content %}
+<div class="container py-5 px-2 bg-white">
+    <div class="row px-4">
+        <div class="col-12">
+            {% if post.image %}
+            <img class="img-fluid mb-4" src="{{post.image.url}}" alt="Image">
+            {% endif %}
+            <h2 class="mb-3 font-weight-bold">{{post.title}}</h2>
+            <div class="d-flex">
+                <p class="mr-3 text-muted"><i class="fa fa-calendar-alt"></i> {{post.created_on | date:"d M, Y"}}</p>
+                <p class="mr-3 text-muted"><i class="fa fa-folder"></i> Web Design</p>
+                <p class="mr-3 text-muted"><i class="fa fa-comments"></i> {{ post.comments.count }} Comment{{ post.comments.count|pluralize}}</p>
+            </div>
+            <p>{{post.body}}</p>
+        </div>
+        <div class="col-12 py-4">
+            {% for tag in tags %}
+            <a href="{% url "post_filter" tag.name %}" class="btn btn-sm btn-outline-primary mb-1">{{tag.name}}</a>
+            {% endfor %}
+        </div>
+        <div class="col-12 py-4">
+            <div class="btn-group btn-group-lg w-100">
+                <button type="button" class="btn btn-outline-primary"><i class="fa fa-angle-left mr-2"></i> Previous</button>
+                <button type="button" class="btn btn-outline-primary">Next<i class="fa fa-angle-right ml-2"></i></button>
+            </div> 
+        </div>
+        <div class="col-12 py-4">
+            <h3 class="mb-4 font-weight-bold">{{ post.comments.count }} Comment{{ post.comments.count|pluralize}}</h3>
+            {% for comment in comments %}
+            <div class="media mb-4">
+                <img src="{{comment.image.url}}" alt="Image" class="mr-3 mt-1 rounded-circle" style="width:60px;">
+                <div class="media-body">
+                    {% if comment.isParent %}
+                    <h4>{{comment.name}} <small><i>{{comment.created_on}}</i></small></h4>
+                    <p>{{comment.msg}}</p>
+                    <button class="btn btn-sm btn-light">Reply</button>
+                    {% endif %}
+                    {% if comment.getReplies %}
+                    {% for reply in comment.getReplies %}
+                    <div class="media mb-4">
+                        <img src="{{reply.image.url}}" alt="Image" class="mr-3 mt-1 rounded-circle" style="width:60px;">
+                        <div class="media-body">
+                            <h4>{{reply.name}} <small><i>{{reply.created_on}}</i></small></h4>
+                            <p>{{reply.msg}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    {% endif %}
+
+                    <div class="col-12">
+                        <h3 class="mb-4 font-weight-bold">Reply a comment</h3>
+                        <form method='post'>
+                            {% csrf_token %}
+                            {{comment_form.as_p}}
+                            <input type="hidden" name="parentId" value={{comment.pk}}>
+                            <div class="form-group">
+                                <input type="submit" value="Reply Comment" class="btn btn-primary">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="col-12">
+            <h3 class="mb-4 font-weight-bold">Leave a comment</h3>
+            <form method='post'>
+                {% csrf_token %}
+                {{comment_form.as_p}}
+                <div class="form-group">
+                    <input type="submit" value="Leave Comment" class="btn btn-primary">
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock content %}
