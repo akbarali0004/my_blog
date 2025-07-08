@@ -8,7 +8,7 @@ from .forms import CommentForm
 def getPosts(request):
     template_name = 'postapp/list.html'
     posts = Post.objects.all()
-    context={'posts':posts}
+    context={'posts':posts, 'status':'postList'}
     return render(request, template_name=template_name, context=context)
 
 
@@ -46,3 +46,8 @@ def getPostsByTag(request, tagName):
     template_name = 'postapp/list.html'
     posts = Post.objects.filter(tag__name=tagName).all()
     return render(request=request, template_name=template_name, context={'posts':posts})
+
+
+def about(request):
+    template_name = 'about.html'
+    return render(request=request, template_name=template_name)

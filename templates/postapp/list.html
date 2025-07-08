@@ -27,6 +27,22 @@
             <a class="btn btn-link p-0" href="{% url "post_detail" post.id %}">Read More <i class="fa fa-angle-right"></i></a>
         </div>
     </div>
+    {% if forloop.counter|divisibleby:"3" %}
+    <!-- Subscribe Start -->
+    <div class="container py-5 px-4 bg-secondary text-center">
+        <h1 class="text-white font-weight-bold">Subscribe My Newsletter</h1>
+        <p class="text-white">Subscribe and get my latest article in your inbox</p>
+        <form class="form-inline justify-content-center">
+            <div class="input-group">
+                <input type="text" class="form-control" placeholder="Your Email">
+                <div class="input-group-append">
+                <button class="btn btn-primary" type="submit">Subscribe</button>
+                </div>
+            </div>
+        </form>
+    </div><br><br>
+    <!-- Subscribe End -->
+    {% endif %}
     {% endfor %}
 </div>
 {% endblock content %}
